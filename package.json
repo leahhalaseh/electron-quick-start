@@ -1,14 +1,15 @@
 {
-  "name": "electron-quick-start",
+  "name": "Electron",
   "version": "1.0.0",
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
-    "start": "electron main.js"
+    "start": "electron main.js",
+    "build": "electron-packager --platform=darwin --arch=x64 --version=0.36.3 . electron"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/atom/electron-quick-start.git"
+    "url": "https://github.com/leahhalaseh/electron-quick-start.git"
   },
   "keywords": [
     "Electron",
@@ -23,6 +24,10 @@
   },
   "homepage": "https://github.com/atom/electron-quick-start#readme",
   "devDependencies": {
+    "electron-packager": "^5.2.0",
     "electron-prebuilt": "^0.36.0"
+  },
+  "dependencies": {
+    "sqlite3": "^3.1.1"
   }
 }

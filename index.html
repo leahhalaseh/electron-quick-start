@@ -1,13 +1,142 @@
-<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
-  </head>
-  <body>
-    <h1>Hello World!</h1>
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chrome <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
-  </body>
+	<head>
+		<link rel="stylesheet" href="jquery-ui.min.css">
+		<!-- <script src="external/jquery/jquery.js"></script> -->
+		<script>window.$ = window.jQuery = require('./external/jquery/jquery.js');</script>
+		<script src="jquery-ui.min.js"></script>
+		<script src="jsPlumb-2.0.5-min.js"></script>
+		<script src= "actual.js"> </script>
+		<!-- <script src="/Users/leahhalaseh/desktop/github/electron-quick-start/actual.js"> --> 
+		<script>
+			$(function() {
+				$( "#new" ).click(function() {
+  					$( "#container div" ).remove();
+  					$( "#container img" ).remove();
+  					$( "#container svg" ).remove();
+
+				/* var db = openDatabase('Circuit', ' 3.8.10.2', 'Test DB');
+				var msg;
+			
+        	    db.transaction(function (tx) {
+            	tx.executeSql('DELETE FROM Circuit WHERE CompId = 11');
+                msg = '<p>deleted row</p>';
+                document.querySelector('#status').innerHTML =  msg;
+                });
+  					// send component ID to data base from #container */
+  					 delMyRow();
+				})
+
+
+				
+
+				function guid() {
+				  	function s4() {
+				    	return Math.floor((1 + Math.random()) * 0x10000)
+				      		.toString(16)
+				      		.substring(1);
+				  	}
+				  	return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+				}
+
+			    $('.element img').draggable({
+			    	appendTo: '#container',
+				    helper: function (e, ui) {
+				        return $(this).clone();
+				    },
+				});
+				$("#container").droppable({
+        			drop: function (event, ui) {
+        				if (! $(ui.draggable).hasClass("unic")) {
+        					var elem = $(ui.draggable).clone();
+            				elem.attr("id", elem.attr("id") + "--" + guid()).addClass("unic").css(ui.offset).css({position:"absolute"}).appendTo(this);
+				            jsPlumb.setContainer("container");
+				            jsPlumb.draggable(elem);
+				            var common = {
+				              	isSource: true,
+				              	isTarget: true,
+				              	connector: ["Straight"],
+				              	maxConnections: 5,
+				              	endpoint:"Dot",
+				              	paintStyle: {
+				              		fillStyle: "black",
+				              		outlineColor: "black",
+				              		outlineWidth: 1,
+				              		radius: 5
+				              	},
+				              	hoverPaintStyle: {
+				              		fillStyle:"black" 
+				              	},
+				              	connectorStyle: { 
+				              		strokeStyle:"black",
+				              		lineWidth:2
+				              	},
+				            };
+				            
+				            jsPlumb.addEndpoint(elem, { 
+				              	anchor:"Left"
+				            }, common);
+
+				            jsPlumb.addEndpoint(elem, { 
+				              	anchor:"Right" 
+				            }, common);
+
+				            elem.dblclick(function(){ 
+							    jsPlumb.remove(elem);
+							});
+				            // console.log(jsPlumb.getConnections());
+			        	}
+			        }
+			    });
+			});
+
+			
+		</script>
+
+			
+		<link rel="stylesheet" type="text/css" href="index.css">
+		<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
+	</head>
+
+	<body>
+		<nav class="header">
+			<div class="button" id="new">
+				New
+			</div>
+			<div class="button">
+				Save
+			</div>
+			<div class="button" id="run">
+				Run
+			</div>
+		</nav>
+
+		<div id="container"> </div>
+
+		<div class="components">
+			<div class="element">
+				Resistor
+				<img src="img/resistor.png" id="resistor">
+			</div>
+			<div class="element">
+				Switch
+				<img src="img/switch.png" id="switch">
+			</div>
+			<div class="element">
+				Cell
+				<img src="img/cell.png" id="cell">
+			</div>
+			<div class="element">
+				Led
+				<img src="img/led.png" id="led">
+			</div>
+			<div class="element">
+				Voltmeter
+				<img src="img/voltmeter.png" id="voltmeter">
+			</div>
+			<div class="element">
+				Ammeter
+				<img src="img/ammeter.png" id="ammeter">
+			</div>
+		</div>
+	</body>
 </html>

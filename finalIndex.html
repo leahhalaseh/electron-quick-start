@@ -1,0 +1,206 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="jquery-ui.min.css">
+		<script>window.$ = window.jQuery = require('./external/jquery/jquery.js');</script>
+		<!--<script src="external/jquery/jquery.js"></script>-->
+		<script src="jquery-ui.min.js"></script>
+		<script src="jsPlumb-2.0.5-min.js"></script>
+		<!--<script src="functions.js"></script>-->
+		<script>
+			$(function() {
+				//createDatabase();
+				$('.tip').dblclick(function(){ 
+					$('.tip').hide();
+				});
+				$( "#new" ).click(function() {
+  					$( "#container div" ).remove();
+  					$( "#container .drag" ).remove();
+  					$( "#container svg" ).remove();
+				})
+				function guid() {
+				  	function s4() {
+				    	return Math.floor((1 + Math.random()) * 0x10000)
+				      		.toString(16)
+				      		.substring(1);
+				  	}
+				  	return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+				}
+			    $('.element .drag').draggable({
+			    	appendTo: '#container',
+				    helper: function (e, ui) {
+				        return $(this).clone();
+				    },
+				});
+				$("#container").droppable({
+        			drop: function (event, ui) {
+        				if (! $(ui.draggable).hasClass("unic")) {
+        					var elem = $(ui.draggable).clone();
+            				elem.attr("id", elem.attr("id") + "--" + guid()).addClass("unic").css(ui.offset).css({position:"absolute"}).appendTo(this);
+            				elem.children(".show").show();
+				            jsPlumb.setContainer("container");
+				            jsPlumb.draggable(elem);
+				            var common = {
+				              	isSource: true,
+				              	isTarget: true,
+				              	connector: ["Flowchart"],
+				              	maxConnections: 5,
+				              	endpoint:"Dot",
+				              	paintStyle: {
+				              		fillStyle: "black",
+				              		outlineColor: "black",
+				              		outlineWidth: 1,
+				              		radius: 5
+				              	},
+				              	hoverPaintStyle: {
+				              		fillStyle:"black" 
+				              	},
+				              	connectorStyle: { 
+				              		strokeStyle:"black",
+				              		lineWidth:2
+				              	},
+				            };
+				            
+				            jsPlumb.addEndpoint(elem, { 
+				              	anchor:"Left"
+				            }, common);
+				            jsPlumb.addEndpoint(elem, { 
+				              	anchor:"Right" 
+				            }, common);
+				            elem.dblclick(function(){ 
+							    jsPlumb.remove(elem);
+							});
+				            // console.log(jsPlumb.getConnections());
+				            var ID = getID(elem);
+				            console.log(ID);
+        					//createComponent(ui.offset.left,ui.offset.top,elem.attr("id"));
+			        	}
+			        }
+			    });
+			});
+		</script>
+		<link rel="stylesheet" type="text/css" href="index.css">
+		<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
+	</head>
+
+	<body>
+		
+		<!-- Header nav bar -->
+		<nav class="header">
+			<div class="button" id="new"> <!--onclick="clearCircuit()-->
+				Clear
+			</div>
+			<a href = "javascript:void(0)" onclick = "document.getElementById('light2').style.display='block';document.getElementById('fade').style.display='block'">	
+				<div class="button">
+					Save
+				</div>
+			</a>
+			<!--<div class="button" id="saved">
+				Circuits
+				<div id="sidebar"> 
+					<div id="wrapper">
+						<div class="savedItem">
+							Saved Circuit 1
+						</div>
+						<div class="savedItem">
+							Saved Circuit 2
+						</div>
+						<div class="savedItem">
+							Saved Circuit 3
+						</div>
+						<div class="savedItem">
+							Saved Circuit with very very long name that may create a problem but then again maybe not.
+						</div>
+						<div class="savedItem">
+							Saved Circuit 5
+						</div>
+					</div>
+				</div>
+			</div>-->
+			<a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'">	
+				<div class="button" id="run">
+					Run
+				</div>
+			</a>
+		</nav>
+
+		<!-- Results pop-up -->
+		<div id="light" class="white_content">
+			<h1>Results</h1>
+			<b>Resistance: 10</b> </br> <!--<script>document.write(getResistance())</script>-->
+			<b>Current: 0.9</b> </br><!--<script>document.write(calcCurrent())</script>-->
+			<b>Voltage: 9</b> </br><!--<script>document.write(getVoltage())</script>-->
+			<a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">x</a>
+		</div>
+        <div id="fade" class="black_overlay"></div>
+
+        <!-- Save pop-up -->
+		<div id="light2" class="white_content">
+			<h1>Save circuit</h1>
+			<form>	
+				<b>Name:</b> <input type="text" name="FirstName"></br>
+				<input type="submit" value="Save" class="submitButton">
+			</form>
+			<a href = "javascript:void(0)" onclick = "document.getElementById('light2').style.display='none';document.getElementById('fade').style.display='none'">x</a>
+		</div>
+        <div id="fade" class="black_overlay"></div>
+
+        <!-- Canvas  -->
+		<div id="container"> </div>
+
+		<!-- Left sidebar -->
+		<div class="components">
+			<div class="element">
+				Resistor
+				<div class="drag">	
+					<img src="img/resistor.png" id="resistor">
+					<form class="inputValue show">
+						<input type="text" name="resistor_ohm" value="10">&#8486;
+					</form>
+				</div>
+			</div>
+			<div class="element">
+				Switch
+				<div class="drag">	
+					<img src="img/switch.png" id="switch">
+					<div class="onoffswitch show">
+					    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+					    <label class="onoffswitch-label" for="myonoffswitch"></label>
+					</div>
+				</div>
+			</div>
+			<div class="element">
+				Cell
+				<div class="drag">	
+					<img src="img/cell.png" id="cell">
+					<form class="inputValue show">
+						<input type="text" name="cell_voltage" value="10">V
+					</form>
+				</div>
+			</div>
+			<div class="element">
+				Led
+				<div class="drag">	
+					<img src="img/led.png" id="led">
+					<form class="inputValue show">
+						<input type="text" name="led_ohm" value="10">&#8486;
+						<!--editValue(name, elem);-->
+					</form>
+				</div>
+			</div>
+			<div class="element">
+				Voltmeter
+				<img src="img/voltmeter.png" id="voltmeter" class="drag">
+			</div>
+			<div class="element">
+				Ammeter
+				<img src="img/ammeter.png" id="ammeter" class="drag">
+			</div>
+		</div>
+
+		<!-- Tip box -->
+		<div class="tip">
+			<img src="img/tip.png">
+			<p>Double click on an element to delete it from the canvas.</p>
+		</div>
+	</body>
+</html>
